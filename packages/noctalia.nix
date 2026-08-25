@@ -5,7 +5,7 @@
   fetchFromGitHub,
   fontconfig,
   freetype,
-  gitMinimal,
+  git,
   glib,
   harfbuzz,
   installShellFiles,
@@ -79,7 +79,7 @@ stdenv.mkDerivation {
 
   postFixup = ''
     wrapProgram $out/bin/noctalia \
-      --prefix PATH : ${lib.makeBinPath [ gitMinimal ]}
+      --prefix PATH : ${lib.makeBinPath [ git ]}
   '';
 
   nativeBuildInputs = [
