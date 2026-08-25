@@ -44,13 +44,9 @@
     in
     {
       overlays.default = final: prev: {
-        noctalia = final.callPackage ./packages/noctalia.nix {
-          src = inputs.noctalia;
-        };
+        noctalia = final.callPackage ./packages/noctalia.nix { src = inputs.noctalia; };
 
-        umbriel = final.callPackage ./packages/umbriel.nix {
-          src = inputs.umbriel;
-        };
+        umbriel = final.callPackage ./packages/umbriel.nix { src = inputs.umbriel; };
 
         xdg-desktop-portal-umbriel = final.callPackage ./packages/xdg-desktop-portal-umbriel.nix {
           src = inputs.xdg-desktop-portal-umbriel;
@@ -60,13 +56,9 @@
       packages = forEachSystem (
         { pkgs, ... }:
         {
-          noctalia = pkgs.callPackage ./packages/noctalia.nix {
-            src = inputs.noctalia;
-          };
+          noctalia = pkgs.callPackage ./packages/noctalia.nix { src = inputs.noctalia; };
 
-          umbriel = pkgs.callPackage ./packages/umbriel.nix {
-            src = inputs.umbriel;
-          };
+          umbriel = pkgs.callPackage ./packages/umbriel.nix { src = inputs.umbriel; };
 
           xdg-desktop-portal-umbriel = pkgs.callPackage ./packages/xdg-desktop-portal-umbriel.nix {
             src = inputs.xdg-desktop-portal-umbriel;
