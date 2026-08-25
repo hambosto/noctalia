@@ -1,23 +1,40 @@
 {
-  description = "A sleek, customizable desktop shell crafted for Wayland.";
+  description = "All in one configuration for noctalia ecosystem";
 
   inputs = {
-    nixpkgs.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.zst";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+    noctalia = {
+      url = "github:noctalia-dev/noctalia";
+      flake = false;
+    };
+
+    umbriel = {
+      url = "git+https://github.com/noctalia-dev/umbriel.git?submodules=1";
+      flake = false;
+    };
+
+    xdg-desktop-portal-umbriel = {
+      url = "github:noctalia-dev/xdg-desktop-portal-umbriel";
+      flake = false;
+    };
   };
 
   outputs =
-    { self, nixpkgs }:
+    inputs@{
+      self,
+      nixpkgs,
+      ...
+    }:
     let
-      inherit (nixpkgs.lib) genAttrs getExe warn;
-
+      inherit (nixpkgs) lib;
       systems = [
         "x86_64-linux"
         "aarch64-linux"
       ];
-
       forEachSystem =
         perSystem:
-        genAttrs systems (
+        lib.genAttrs systems (
           system:
           let
             pkgs = nixpkgs.legacyPackages.${system};
@@ -27,56 +44,57 @@
     in
     {
       overlays.default = final: prev: {
-        noctalia = final.callPackage ./nix/package.nix { };
+        noctalia = final.callPackage ./packages/noctalia.nix {
+          src = inputs.noctalia;
+        };
+
+        umbriel = final.callPackage ./packages/umbriel.nix {
+          src = inputs.umbriel;
+        };
+
+        xdg-desktop-portal-umbriel = final.callPackage ./packages/xdg-desktop-portal-umbriel.nix {
+          src = inputs.xdg-desktop-portal-umbriel;
+        };
       };
 
       packages = forEachSystem (
         { pkgs, ... }:
-        rec {
-          default = pkgs.callPackage ./nix/package.nix { };
-          # DEPRECATED: identical to `default`; kept for compat, warns on use.
-          cuda = warn "noctalia: the `.#cuda` package output is deprecated and now identical to `.#default` (autoAddDriverRunpath is always applied); switch to `.#default`. This alias will be removed in the future." default;
-        }
-      );
-
-      devShells = forEachSystem (
-        { pkgs, system }:
         {
-          default = pkgs.callPackage ./nix/devshell.nix {
-            noctalia = self.packages.${system}.default;
+          noctalia = pkgs.callPackage ./packages/noctalia.nix {
+            src = inputs.noctalia;
+          };
+
+          umbriel = pkgs.callPackage ./packages/umbriel.nix {
+            src = inputs.umbriel;
+          };
+
+          xdg-desktop-portal-umbriel = pkgs.callPackage ./packages/xdg-desktop-portal-umbriel.nix {
+            src = inputs.xdg-desktop-portal-umbriel;
           };
         }
       );
 
-      apps = forEachSystem (
-        { system, ... }:
-        {
-          default = {
-            type = "app";
-            program = getExe self.packages.${system}.default;
-          };
-        }
-      );
+      homeManagerModules.noctalia = { lib, pkgs, ... }: {
+        imports = [ ./modules/noctalia/home-module.nix ];
+        programs.noctalia.package = lib.mkDefault self.packages.${pkgs.stdenv.hostPlatform.system}.noctalia;
+      };
 
-      homeModules.default =
-        { pkgs, lib, ... }:
-        {
-          imports = [ ./nix/home-module.nix ];
-          programs.noctalia.package = lib.mkDefault self.packages.${pkgs.stdenv.hostPlatform.system}.default;
-        };
+      homeManagerModules.umbriel = { lib, pkgs, ... }: {
+        imports = [ ./modules/umbriel/home-module.nix ];
+        programs.umbriel.package = lib.mkDefault self.packages.${pkgs.stdenv.hostPlatform.system}.umbriel;
+      };
 
-      hjemModules.default =
-        { pkgs, lib, ... }:
-        {
-          imports = [ ./nix/hjem-module.nix ];
-          programs.noctalia.package = lib.mkDefault self.packages.${pkgs.stdenv.hostPlatform.system}.default;
-        };
+      nixosModules.noctalia = { lib, pkgs, ... }: {
+        imports = [ ./modules/noctalia/nixos-module.nix ];
+        programs.noctalia.package = lib.mkDefault self.packages.${pkgs.stdenv.hostPlatform.system}.noctalia;
+      };
 
-      nixosModules.default =
-        { pkgs, lib, ... }:
-        {
-          imports = [ ./nix/nixos-module.nix ];
-          programs.noctalia.package = lib.mkDefault self.packages.${pkgs.stdenv.hostPlatform.system}.default;
-        };
+      nixosModules.umbriel = { lib, pkgs, ... }: {
+        imports = [ ./modules/umbriel/nixos-module.nix ];
+        programs.umbriel.package = lib.mkDefault self.packages.${pkgs.stdenv.hostPlatform.system}.umbriel;
+        programs.umbriel.portalPackage =
+          lib.mkDefault
+            self.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-umbriel;
+      };
     };
 }
