@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -12,16 +13,14 @@ in
   options.programs.umbriel = {
     enable = lib.mkEnableOption "Umbriel, a Wayland compositor built on wlroots and SceneFX.";
 
-    package = lib.mkOption {
-      type = lib.types.nullOr lib.types.package;
-      default = null;
-      description = "The umbriel package to install.";
+    package = lib.mkPackageOption pkgs "umbriel" {
+      nullable = true;
+      extraDescription = "Set to `null` to not add any umbriel package to your path.";
     };
 
-    portalPackage = lib.mkOption {
-      type = lib.types.nullOr lib.types.package;
-      default = null;
-      description = "The xdg-desktop-portal-umbriel package to install.";
+    portalPackage = lib.mkPackageOption pkgs "xdg-desktop-portal-umbriel" {
+      nullable = true;
+      extraDescription = "Set to `null` to not add any xdg-desktop-portal-umbriel package to your path.";
     };
   };
 

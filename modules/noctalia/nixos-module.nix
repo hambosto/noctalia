@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -11,11 +12,9 @@ in
 
   options.programs.noctalia = {
     enable = lib.mkEnableOption "Whether to enable noctalia, a lightweight Wayland shell and bar.";
-
-    package = lib.mkOption {
-      type = lib.types.nullOr lib.types.package;
-      default = null;
-      description = "The noctalia package to install.";
+    package = lib.mkPackageOption pkgs "noctalia" {
+      nullable = true;
+      extraDescription = "Set to `null` to not add any noctalia package to your path.";
     };
 
     systemd = {

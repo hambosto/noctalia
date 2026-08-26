@@ -23,10 +23,9 @@ in
   options.programs.umbriel = {
     enable = lib.mkEnableOption "Umbriel, a Wayland compositor built on wlroots and SceneFX.";
 
-    package = lib.mkOption {
-      type = lib.types.nullOr lib.types.package;
-      default = null;
-      description = "The umbriel package to install.";
+    package = lib.mkPackageOption pkgs "umbriel" {
+      nullable = true;
+      extraDescription = "Set to `null` to not add any umbriel package to your path.";
     };
 
     settings = lib.mkOption {
@@ -63,6 +62,7 @@ in
         };
       '';
     };
+
     validateConfig = lib.mkOption {
       type = lib.types.bool;
       default = true;
@@ -80,7 +80,7 @@ in
             rawConfig = generateToml "umbriel-config.toml" cfg.settings;
           in
           if cfg.validateConfig && cfg.package != null then
-            pkgs.runCommand "noctalia-config" { } ''
+            pkgs.runCommand "umbriel-config" { } ''
               ${lib.getExe cfg.package} validate -c ${rawConfig}
               cp ${rawConfig} $out
             ''

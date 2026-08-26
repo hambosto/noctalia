@@ -28,9 +28,9 @@ in
     enable = lib.mkEnableOption "Whether to enable noctalia, a lightweight Wayland shell and bar.";
     systemd.enable = lib.mkEnableOption "Enables a systemd user service for noctalia.";
 
-    package = lib.mkOption {
-      type = lib.types.nullOr lib.types.package;
-      description = "The noctalia package to use.";
+    package = lib.mkPackageOption pkgs "noctalia" {
+      nullable = true;
+      extraDescription = "Set to `null` to not add any noctalia package to your path.";
     };
 
     checkConfig = lib.mkOption {
