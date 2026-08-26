@@ -1,0 +1,80 @@
+{
+  "nodes": {
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1787498568,
+        "narHash": "sha256-9i/VTdusq/+NM/tz+J1Re+ojkMB8MBf0QshnYfzHz30=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "56c02bc00adcf003215cc4bd996d6efaf4cff188",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "noctalia": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1787742524,
+        "narHash": "sha256-oF+EMt+AUyVeNh7yQ75BishmxezgNMUcmxRc9foRJPI=",
+        "owner": "noctalia-dev",
+        "repo": "noctalia",
+        "rev": "b0958cf2885ca63bf46b62fbea8f582ffd3bb9e2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "noctalia-dev",
+        "repo": "noctalia",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "nixpkgs": "nixpkgs",
+        "noctalia": "noctalia",
+        "umbriel": "umbriel",
+        "xdg-desktop-portal-umbriel": "xdg-desktop-portal-umbriel"
+      }
+    },
+    "umbriel": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1787752506,
+        "narHash": "sha256-TzT2sDCj9tiZJPrx5i8dpcAvwN7G8mSYFMs9cy0nplw=",
+        "ref": "refs/heads/main",
+        "rev": "82cfb361cc4b14c0ed537ee56edf6a1bcaf5b893",
+        "revCount": 572,
+        "submodules": true,
+        "type": "git",
+        "url": "https://github.com/noctalia-dev/umbriel.git"
+      },
+      "original": {
+        "submodules": true,
+        "type": "git",
+        "url": "https://github.com/noctalia-dev/umbriel.git"
+      }
+    },
+    "xdg-desktop-portal-umbriel": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1787580138,
+        "narHash": "sha256-fqU58lZeFchlY5aqyQgIfrN5ec/jqbhXNwNxyL2lp/g=",
+        "owner": "noctalia-dev",
+        "repo": "xdg-desktop-portal-umbriel",
+        "rev": "515c9f70f13ba4b4b9e19930b3e899c4ac8a50a4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "noctalia-dev",
+        "repo": "xdg-desktop-portal-umbriel",
+        "type": "github"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
