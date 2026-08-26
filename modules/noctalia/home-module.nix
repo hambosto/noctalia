@@ -125,7 +125,7 @@ in
         (lib.mkIf (cfg.settings != { }) {
           "noctalia/config.toml".source =
             let
-              rawConfig = generateToml "config.toml" cfg.settings;
+              rawConfig = generateToml "noctalia-config.toml" cfg.settings;
             in
             if cfg.checkConfig && cfg.package != null then
               pkgs.runCommand "noctalia-config.toml" { } ''
