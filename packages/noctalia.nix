@@ -82,6 +82,11 @@ stdenv.mkDerivation {
       --prefix PATH : ${lib.makeBinPath [ git ]}
   '';
 
+  postPatch = ''
+    substituteInPlace meson.build \
+      --replace-fail "version: '5.0.0'" "version: 'unstable ${fmtDate src.lastModifiedDate} (commit ${src.rev})'"
+  '';
+
   nativeBuildInputs = [
     autoAddDriverRunpath
     installShellFiles
