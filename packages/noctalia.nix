@@ -70,6 +70,11 @@ stdenv.mkDerivation {
 
   inherit src;
 
+  postFixup = ''
+    wrapProgram $out/bin/noctalia \
+      --prefix PATH : ${lib.makeBinPath [ git ]}
+  '';
+
   postInstall = ''
     installShellCompletion --cmd noctalia \
       --bash <($out/bin/noctalia completions bash) \
@@ -77,9 +82,8 @@ stdenv.mkDerivation {
       --zsh <($out/bin/noctalia completions zsh)
   '';
 
-  postFixup = ''
-    wrapProgram $out/bin/noctalia \
-      --prefix PATH : ${lib.makeBinPath [ git ]}
+  postPatch = ''
+    sed -i "s/^\(  \)version: '[^']*'/\1version: 'unstable ${fmtDate src.lastModifiedDate} (commit ${src.rev})'/" meson.build
   '';
 
   nativeBuildInputs = [

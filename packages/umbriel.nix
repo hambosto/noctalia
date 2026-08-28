@@ -81,6 +81,10 @@ stdenv.mkDerivation {
       --prefix PATH : ${lib.makeBinPath [ xwayland-satellite ]} \
   '';
 
+  postPatch = ''
+    sed -i "s/^\(  \)version: '[^']*'/\1version: 'unstable ${fmtDate src.lastModifiedDate} (commit ${src.rev})'/" meson.build
+  '';
+
   passthru.providedSessions = [ "umbriel" ];
 
   meta = with lib; {
