@@ -19,11 +19,11 @@
     "noctalia": {
       "flake": false,
       "locked": {
-        "lastModified": 1787853602,
-        "narHash": "sha256-KMrJVzoPEN6yhepWRArPOD1MPL9lgYuna43OonnWfUY=",
+        "lastModified": 1787879052,
+        "narHash": "sha256-jU2ZtmfuR9ogIu2sXl3ccSfZT/vGxwIjjoXnVHNW7TI=",
         "owner": "noctalia-dev",
         "repo": "noctalia",
-        "rev": "fc717689ccb86ba2f7f570afb32f2a54339f0df1",
+        "rev": "ee3583b7187b59b2506c5f05d991779aa14c8617",
         "type": "github"
       },
       "original": {
@@ -43,11 +43,11 @@
     "umbriel": {
       "flake": false,
       "locked": {
-        "lastModified": 1787855427,
-        "narHash": "sha256-XoDcyu0hCPIZHAlgcmnGi5aeRsSg7Z4/4onfHkE3Exo=",
+        "lastModified": 1787876984,
+        "narHash": "sha256-v3kRGZhkkO9ibGGGz7FgrRnhy1pf2mKfqQTmfh/woyk=",
         "ref": "refs/heads/main",
-        "rev": "b1afdc8b9c718866df13b56b14eac0d46ea4b3a6",
-        "revCount": 618,
+        "rev": "a51b4d09dd6b8a1fca505e7b68edf51dd39deb2d",
+        "revCount": 624,
         "submodules": true,
         "type": "git",
         "url": "https://github.com/noctalia-dev/umbriel.git"
