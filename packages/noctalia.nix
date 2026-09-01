@@ -7,6 +7,7 @@
   freetype,
   git,
   glib,
+  gsettings-desktop-schemas,
   harfbuzz,
   installShellFiles,
   jemalloc,
@@ -79,7 +80,8 @@ stdenv.mkDerivation {
 
   postFixup = ''
     wrapProgram $out/bin/noctalia \
-      --prefix PATH : ${lib.makeBinPath [ git ]}
+      --prefix PATH : ${lib.makeBinPath [ git ]} \
+      --prefix XDG_DATA_DIRS : "${glib.getSchemaDataDirPath gsettings-desktop-schemas}"
   '';
 
   nativeBuildInputs = [
