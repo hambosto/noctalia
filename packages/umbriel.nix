@@ -71,7 +71,6 @@ stdenv.mkDerivation {
   ];
 
   mesonBuildType = "release";
-  mesonInstallFlags = [ "--skip-subprojects" ];
 
   postInstall = ''
     substituteInPlace "$out/share/wayland-sessions/umbriel.desktop" \
@@ -84,7 +83,7 @@ stdenv.mkDerivation {
   passthru.providedSessions = [ "umbriel" ];
 
   meta = with lib; {
-    description = "A Wayland compositor built on wlroots and SceneFX";
+    description = "A Wayland compositor built on wlroots";
     homepage = "https://github.com/noctalia-dev/umbriel";
     license = licenses.mit;
     mainProgram = "umbriel";

@@ -10,7 +10,7 @@
     };
 
     umbriel = {
-      url = "git+https://github.com/noctalia-dev/umbriel.git?submodules=1";
+      url = "github:noctalia-dev/umbriel";
       flake = false;
     };
 
