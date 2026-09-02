@@ -72,6 +72,8 @@ stdenv.mkDerivation {
 
   mesonBuildType = "release";
 
+  mesonFlags = [ (lib.mesonEnable "tests" false) ];
+
   postInstall = ''
     substituteInPlace "$out/share/wayland-sessions/umbriel.desktop" \
       --replace-fail 'Exec=start-umbriel' "Exec=$out/bin/start-umbriel"
