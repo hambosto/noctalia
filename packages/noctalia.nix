@@ -71,30 +71,6 @@ stdenv.mkDerivation {
 
   inherit src;
 
-  postInstall = ''
-    installShellCompletion --cmd noctalia \
-      --bash <($out/bin/noctalia completions bash) \
-      --fish <($out/bin/noctalia completions fish) \
-      --zsh <($out/bin/noctalia completions zsh)
-  '';
-
-  postFixup = ''
-    wrapProgram $out/bin/noctalia \
-      --prefix PATH : ${lib.makeBinPath [ git ]} \
-      --prefix XDG_DATA_DIRS : "${glib.getSchemaDataDirPath gsettings-desktop-schemas}"
-  '';
-
-  nativeBuildInputs = [
-    autoAddDriverRunpath
-    installShellFiles
-    jemalloc
-    makeWrapper
-    meson
-    ninja
-    pkg-config
-    wayland-scanner
-  ];
-
   buildInputs = [
     cairo
     curl
@@ -129,8 +105,33 @@ stdenv.mkDerivation {
     wireplumber
   ];
 
+  nativeBuildInputs = [
+    autoAddDriverRunpath
+    installShellFiles
+    jemalloc
+    makeWrapper
+    meson
+    ninja
+    pkg-config
+    wayland-scanner
+  ];
+
   mesonBuildType = "release";
+  mesonFlags = [ (lib.mesonEnable "tests" false) ];
   ninjaFlags = [ "-v" ];
+
+  postInstall = ''
+    installShellCompletion --cmd noctalia \
+      --bash <($out/bin/noctalia completions bash) \
+      --fish <($out/bin/noctalia completions fish) \
+      --zsh <($out/bin/noctalia completions zsh)
+  '';
+
+  postFixup = ''
+    wrapProgram $out/bin/noctalia \
+      --prefix PATH : ${lib.makeBinPath [ git ]} \
+      --prefix XDG_DATA_DIRS : "${glib.getSchemaDataDirPath gsettings-desktop-schemas}"
+  '';
 
   meta = with lib; {
     description = "A sleek, customizable desktop shell crafted for Wayland.";

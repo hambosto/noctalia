@@ -42,14 +42,6 @@ stdenv.mkDerivation {
 
   inherit src;
 
-  nativeBuildInputs = [
-    makeBinaryWrapper
-    meson
-    ninja
-    pkg-config
-    wayland-scanner
-  ];
-
   buildInputs = [
     cairo
     jemalloc
@@ -70,8 +62,15 @@ stdenv.mkDerivation {
     wlroots_0_20
   ];
 
-  mesonBuildType = "release";
+  nativeBuildInputs = [
+    makeBinaryWrapper
+    meson
+    ninja
+    pkg-config
+    wayland-scanner
+  ];
 
+  mesonBuildType = "release";
   mesonFlags = [ (lib.mesonEnable "tests" false) ];
 
   postInstall = ''

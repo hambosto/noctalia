@@ -34,13 +34,6 @@ stdenv.mkDerivation {
 
   inherit src;
 
-  nativeBuildInputs = [
-    meson
-    ninja
-    pkg-config
-    wayland-scanner
-  ];
-
   buildInputs = [
     cairo
     gtk4
@@ -53,6 +46,13 @@ stdenv.mkDerivation {
     tomlplusplus
     wayland
     wayland-protocols
+  ];
+
+  nativeBuildInputs = [
+    meson
+    ninja
+    pkg-config
+    wayland-scanner
   ];
 
   mesonBuildType = "release";
