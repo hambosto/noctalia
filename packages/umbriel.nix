@@ -71,7 +71,7 @@ stdenv.mkDerivation {
   ];
 
   mesonBuildType = "release";
-  mesonFlags = [ (lib.mesonEnable "tests" false) ];
+  mesonFlags = [ "-Dtests=disabled" ];
 
   postInstall = ''
     substituteInPlace "$out/share/wayland-sessions/umbriel.desktop" \

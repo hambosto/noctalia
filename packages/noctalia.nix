@@ -117,7 +117,7 @@ stdenv.mkDerivation {
   ];
 
   mesonBuildType = "release";
-  mesonFlags = [ (lib.mesonEnable "tests" false) ];
+  mesonFlags = [ "-Dtests=disabled" ];
   ninjaFlags = [ "-v" ];
 
   postInstall = ''
