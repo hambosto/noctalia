@@ -19,6 +19,7 @@
   pkg-config,
   src,
   stdenv,
+  systemd,
   tomlplusplus,
   wayland,
   wayland-protocols,
@@ -56,6 +57,7 @@ stdenv.mkDerivation {
     nlohmann_json
     pango
     pixman
+    systemd
     tomlplusplus
     wayland
     wayland-protocols
