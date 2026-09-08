@@ -56,6 +56,12 @@ stdenv.mkDerivation {
   ];
 
   mesonBuildType = "release";
+  mesonFlags = [
+    (lib.mesonOption "cpp_args" "-ffat-lto-objects")
+    (lib.mesonOption "c_args" "-ffat-lto-objects")
+    (lib.mesonBool "b_lto" true)
+    (lib.mesonBool "strip" true)
+  ];
 
   meta = with lib; {
     description = "xdg-desktop-portal backend for the Umbriel compositor";

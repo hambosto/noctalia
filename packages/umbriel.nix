@@ -73,7 +73,13 @@ stdenv.mkDerivation {
   ];
 
   mesonBuildType = "release";
-  mesonFlags = [ "-Dtests=disabled" ];
+  mesonFlags = [
+    (lib.mesonOption "cpp_args" "-ffat-lto-objects")
+    (lib.mesonOption "c_args" "-ffat-lto-objects")
+    (lib.mesonBool "b_lto" true)
+    (lib.mesonBool "strip" true)
+    "-Dtests=disabled"
+  ];
 
   postInstall = ''
     substituteInPlace "$out/share/wayland-sessions/umbriel.desktop" \
