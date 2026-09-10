@@ -32,36 +32,44 @@
         "x86_64-linux"
         "aarch64-linux"
       ];
-      forEachSystem =
-        perSystem:
-        lib.genAttrs systems (
-          system:
-          let
-            pkgs = nixpkgs.legacyPackages.${system};
-          in
-          perSystem { inherit pkgs system; }
-        );
     in
     {
       overlays.default = final: prev: {
-        noctalia = final.callPackage ./packages/noctalia.nix { src = inputs.noctalia; };
+        noctalia = final.callPackage ./packages/noctalia.nix {
+          src = inputs.noctalia;
+          stdenv = final.gcc16Stdenv;
+        };
 
-        umbriel = final.callPackage ./packages/umbriel.nix { src = inputs.umbriel; };
+        umbriel = final.callPackage ./packages/umbriel.nix {
+          src = inputs.umbriel;
+          stdenv = final.gcc16Stdenv;
+        };
 
         xdg-desktop-portal-umbriel = final.callPackage ./packages/xdg-desktop-portal-umbriel.nix {
           src = inputs.xdg-desktop-portal-umbriel;
+          stdenv = final.gcc16Stdenv;
         };
       };
 
-      packages = forEachSystem (
-        { pkgs, ... }:
+      packages = lib.genAttrs systems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
         {
-          noctalia = pkgs.callPackage ./packages/noctalia.nix { src = inputs.noctalia; };
+          noctalia = pkgs.callPackage ./packages/noctalia.nix {
+            src = inputs.noctalia;
+            stdenv = pkgs.gcc16Stdenv;
+          };
 
-          umbriel = pkgs.callPackage ./packages/umbriel.nix { src = inputs.umbriel; };
+          umbriel = pkgs.callPackage ./packages/umbriel.nix {
+            src = inputs.umbriel;
+            stdenv = pkgs.gcc16Stdenv;
+          };
 
           xdg-desktop-portal-umbriel = pkgs.callPackage ./packages/xdg-desktop-portal-umbriel.nix {
             src = inputs.xdg-desktop-portal-umbriel;
+            stdenv = pkgs.gcc16Stdenv;
           };
         }
       );
