@@ -37,11 +37,11 @@
     "noctalia": {
       "flake": false,
       "locked": {
-        "lastModified": 1789041808,
-        "narHash": "sha256-kPQrg//BYdWAkg66lHJPm4f6iRKwQZsZAZ2CmVRyv8E=",
+        "lastModified": 1789043117,
+        "narHash": "sha256-rW8ecnR54O8GDJzS2A1g571FZfVtPVcNPfTFrvh9ofQ=",
         "owner": "noctalia-dev",
         "repo": "noctalia",
-        "rev": "3b58f9164073cac65d55bf67752a9d8bf6cd8187",
+        "rev": "60a239a799004ad904786ee15841858021ca5827",
         "type": "github"
       },
       "original": {
@@ -77,11 +77,11 @@
     "umbriel": {
       "flake": false,
       "locked": {
-        "lastModified": 1789041531,
-        "narHash": "sha256-SfvBj0VIXxMRuk0iKCF8LyQ0zLDVDMQyIthqmeBQM2U=",
+        "lastModified": 1789044374,
+        "narHash": "sha256-o2oKaumbPtI6t6/65wmUyaHcM1IPux3QvEEcVE0fAio=",
         "owner": "noctalia-dev",
         "repo": "umbriel",
-        "rev": "ddcb113e6a6461592923d71d6731e94bb5c4a7ed",
+        "rev": "615abb8f9ed184f6416ddb398738e1b896d760b7",
         "type": "github"
       },
       "original": {
