@@ -54,23 +54,14 @@
       packages = lib.genAttrs systems (
         system:
         let
-          pkgs = nixpkgs.legacyPackages.${system};
+          pkgs = nixpkgs.legacyPackages.${system}.extend self.overlays.default;
         in
         {
-          noctalia = pkgs.callPackage ./packages/noctalia.nix {
-            src = inputs.noctalia;
-            stdenv = pkgs.gcc16Stdenv;
-          };
-
-          umbriel = pkgs.callPackage ./packages/umbriel.nix {
-            src = inputs.umbriel;
-            stdenv = pkgs.gcc16Stdenv;
-          };
-
-          xdg-desktop-portal-umbriel = pkgs.callPackage ./packages/xdg-desktop-portal-umbriel.nix {
-            src = inputs.xdg-desktop-portal-umbriel;
-            stdenv = pkgs.gcc16Stdenv;
-          };
+          inherit (pkgs)
+            noctalia
+            umbriel
+            xdg-desktop-portal-umbriel
+            ;
         }
       );
 
