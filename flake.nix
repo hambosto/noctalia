@@ -2,6 +2,7 @@
   description = "All in one configuration for noctalia ecosystem";
 
   inputs = {
+    flake-utils.url = "github:numtide/flake-utils";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     noctalia = {
@@ -21,50 +22,57 @@
   };
 
   outputs =
-    inputs@{
+    {
       self,
+      flake-utils,
       nixpkgs,
       ...
-    }:
-    let
-      inherit (nixpkgs) lib;
-      systems = [
-        "x86_64-linux"
-        "aarch64-linux"
-      ];
-      forEachSystem =
-        perSystem:
-        lib.genAttrs systems (
-          system:
+    }@inputs:
+    flake-utils.lib.eachDefaultSystem (
+      system:
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
+        fmtDate =
+          raw:
           let
-            pkgs = nixpkgs.legacyPackages.${system};
+            year = builtins.substring 0 4 raw;
+            month = builtins.substring 4 2 raw;
+            day = builtins.substring 6 2 raw;
           in
-          perSystem { inherit pkgs system; }
-        );
-    in
-    {
-      overlays.default = final: prev: {
-        noctalia = final.callPackage ./packages/noctalia.nix { src = inputs.noctalia; };
+          "${year}-${month}-${day}";
+        date = fmtDate self.lastModifiedDate;
+        version = "unstable-${date}-${self.shortRev or "dirty"}";
+      in
+      {
+        packages = {
+          noctalia = pkgs.callPackage ./packages/noctalia.nix {
+            src = inputs.noctalia;
+            stdenv = pkgs.gcc16Stdenv;
+            inherit version;
+          };
 
-        umbriel = final.callPackage ./packages/umbriel.nix { src = inputs.umbriel; };
-
-        xdg-desktop-portal-umbriel = final.callPackage ./packages/xdg-desktop-portal-umbriel.nix {
-          src = inputs.xdg-desktop-portal-umbriel;
-        };
-      };
-
-      packages = forEachSystem (
-        { pkgs, ... }:
-        {
-          noctalia = pkgs.callPackage ./packages/noctalia.nix { src = inputs.noctalia; };
-
-          umbriel = pkgs.callPackage ./packages/umbriel.nix { src = inputs.umbriel; };
+          umbriel = pkgs.callPackage ./packages/umbriel.nix {
+            src = inputs.umbriel;
+            stdenv = pkgs.gcc16Stdenv;
+            inherit version;
+          };
 
           xdg-desktop-portal-umbriel = pkgs.callPackage ./packages/xdg-desktop-portal-umbriel.nix {
             src = inputs.xdg-desktop-portal-umbriel;
+            stdenv = pkgs.gcc16Stdenv;
+            inherit version;
           };
-        }
-      );
+        };
+      }
+    )
+    // {
+      overlays.default = _: prev: {
+        inherit (self.packages.${prev.stdenv.system})
+          noctalia
+          umbriel
+          xdg-desktop-portal-umbriel
+          ;
+      };
 
       homeManagerModules.noctalia = { lib, pkgs, ... }: {
         imports = [ ./modules/noctalia/home-module.nix ];
