@@ -21,27 +21,16 @@
   stdenv,
   systemd,
   tomlplusplus,
+  version ? "git",
   wayland,
   wayland-protocols,
   wayland-scanner,
   wlroots_0_20,
   xwayland-satellite,
 }:
-let
-  fmtDate =
-    raw:
-    let
-      year = builtins.substring 0 4 raw;
-      month = builtins.substring 4 2 raw;
-      day = builtins.substring 6 2 raw;
-    in
-    "${year}-${month}-${day}";
-in
 stdenv.mkDerivation {
   pname = "umbriel";
-  version = "unstable-${fmtDate src.lastModifiedDate}-${src.shortRev}";
-
-  inherit src;
+  inherit src version;
 
   buildInputs = [
     cairo

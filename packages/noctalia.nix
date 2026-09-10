@@ -40,21 +40,13 @@
   stdenv,
   systemd,
   tomlplusplus,
+  version ? "git",
   wayland,
   wayland-protocols,
   wayland-scanner,
   wireplumber,
 }:
 let
-  fmtDate =
-    raw:
-    let
-      year = builtins.substring 0 4 raw;
-      month = builtins.substring 4 2 raw;
-      day = builtins.substring 6 2 raw;
-    in
-    "${year}-${month}-${day}";
-
   stb' = stb.overrideAttrs (_: {
     version = "unstable-2025-10-26";
     src = fetchFromGitHub {
@@ -67,9 +59,7 @@ let
 in
 stdenv.mkDerivation {
   pname = "noctalia";
-  version = "unstable-${fmtDate src.lastModifiedDate}-${src.shortRev}";
-
-  inherit src;
+  inherit src version;
 
   buildInputs = [
     cairo
@@ -124,7 +114,6 @@ stdenv.mkDerivation {
     (lib.mesonBool "strip" true)
     "-Dtests=disabled"
   ];
-  ninjaFlags = [ "-v" ];
 
   postInstall = ''
     installShellCompletion --cmd noctalia \
