@@ -47,19 +47,16 @@
         packages = {
           noctalia = pkgs.callPackage ./packages/noctalia.nix {
             src = inputs.noctalia;
-            stdenv = pkgs.gcc16Stdenv;
             inherit version;
           };
 
           umbriel = pkgs.callPackage ./packages/umbriel.nix {
             src = inputs.umbriel;
-            stdenv = pkgs.gcc16Stdenv;
             inherit version;
           };
 
           xdg-desktop-portal-umbriel = pkgs.callPackage ./packages/xdg-desktop-portal-umbriel.nix {
             src = inputs.xdg-desktop-portal-umbriel;
-            stdenv = pkgs.gcc16Stdenv;
             inherit version;
           };
         };
