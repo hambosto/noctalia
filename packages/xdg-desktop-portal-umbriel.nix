@@ -1,5 +1,6 @@
 {
   cairo,
+  gcc16Stdenv,
   gtk4,
   lib,
   libdrm,
@@ -11,7 +12,6 @@
   pkg-config,
   sdbus-cpp_2,
   src,
-  stdenv,
   systemd,
   tomlplusplus,
   wayland,
@@ -28,7 +28,7 @@ let
     in
     "${year}-${month}-${day}";
 in
-stdenv.mkDerivation {
+gcc16Stdenv.mkDerivation {
   pname = "xdg-desktop-portal-umbriel";
   version = "unstable-${fmtDate src.lastModifiedDate}-${src.shortRev}";
 

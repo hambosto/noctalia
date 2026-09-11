@@ -5,6 +5,7 @@
   fetchFromGitHub,
   fontconfig,
   freetype,
+  gcc16Stdenv,
   git,
   glib,
   gsettings-desktop-schemas,
@@ -37,7 +38,6 @@
   sdbus-cpp_2,
   src,
   stb,
-  stdenv,
   systemd,
   tomlplusplus,
   wayland,
@@ -65,7 +65,7 @@ let
     };
   });
 in
-stdenv.mkDerivation {
+gcc16Stdenv.mkDerivation {
   pname = "noctalia";
   version = "unstable-${fmtDate src.lastModifiedDate}-${src.shortRev}";
 

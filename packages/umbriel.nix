@@ -1,5 +1,6 @@
 {
   cairo,
+  gcc16Stdenv,
   jemalloc,
   lcms2,
   lib,
@@ -18,7 +19,6 @@
   pixman,
   pkg-config,
   src,
-  stdenv,
   systemd,
   tomlplusplus,
   wayland,
@@ -37,7 +37,7 @@ let
     in
     "${year}-${month}-${day}";
 in
-stdenv.mkDerivation {
+gcc16Stdenv.mkDerivation {
   pname = "umbriel";
   version = "unstable-${fmtDate src.lastModifiedDate}-${src.shortRev}";
 
