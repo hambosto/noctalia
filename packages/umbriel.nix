@@ -19,6 +19,7 @@
   pixman,
   pkg-config,
   src,
+  stdenv,
   systemd,
   tomlplusplus,
   wayland,
@@ -37,7 +38,7 @@ let
     in
     "${year}-${month}-${day}";
 in
-gcc16Stdenv.mkDerivation {
+stdenv.mkDerivation {
   pname = "umbriel";
   version = "unstable-${fmtDate src.lastModifiedDate}-${src.shortRev}";
 

@@ -12,6 +12,7 @@
   pkg-config,
   sdbus-cpp_2,
   src,
+  stdenv,
   systemd,
   tomlplusplus,
   wayland,
@@ -28,7 +29,7 @@ let
     in
     "${year}-${month}-${day}";
 in
-gcc16Stdenv.mkDerivation {
+stdenv.mkDerivation {
   pname = "xdg-desktop-portal-umbriel";
   version = "unstable-${fmtDate src.lastModifiedDate}-${src.shortRev}";
 
