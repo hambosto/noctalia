@@ -39,6 +39,12 @@ in
       (lib.mkIf (cfg.package != null) {
         environment.systemPackages = [ cfg.package ];
         services.displayManager.sessionPackages = [ cfg.package ];
+        systemd.packages = [ cfg.package ];
+
+        systemd.user.services.umbriel = {
+          enableDefaultPath = false;
+          restartIfChanged = false;
+        };
       })
 
       (lib.mkIf (cfg.portalPackage != null) {
