@@ -1,6 +1,5 @@
 {
   cairo,
-  gcc16Stdenv,
   jemalloc,
   lcms2,
   lib,
@@ -74,6 +73,7 @@ stdenv.mkDerivation {
   ];
 
   mesonBuildType = "release";
+
   mesonFlags = [
     (lib.mesonOption "cpp_args" "-ffat-lto-objects")
     (lib.mesonOption "c_args" "-ffat-lto-objects")
@@ -88,6 +88,11 @@ stdenv.mkDerivation {
 
     wrapProgram $out/bin/umbriel \
       --prefix PATH : ${lib.makeBinPath [ xwayland-satellite ]} \
+  '';
+
+  postPatch = ''
+    substituteInPlace meson.build \
+      --replace-fail "umbriel_git_revision_config.set('VCS_TAG', 'unknown')" "umbriel_git_revision_config.set('VCS_TAG', '${src.shortRev}')"
   '';
 
   passthru.providedSessions = [ "umbriel" ];

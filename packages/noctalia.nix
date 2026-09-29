@@ -117,6 +117,7 @@ stdenv.mkDerivation {
   ];
 
   mesonBuildType = "release";
+
   mesonFlags = [
     (lib.mesonOption "cpp_args" "-ffat-lto-objects")
     (lib.mesonOption "c_args" "-ffat-lto-objects")
@@ -124,7 +125,14 @@ stdenv.mkDerivation {
     (lib.mesonBool "strip" true)
     "-Dtests=disabled"
   ];
+
   ninjaFlags = [ "-v" ];
+
+  postFixup = ''
+    wrapProgram $out/bin/noctalia \
+      --prefix PATH : ${lib.makeBinPath [ git ]} \
+      --prefix XDG_DATA_DIRS : "${glib.getSchemaDataDirPath gsettings-desktop-schemas}"
+  '';
 
   postInstall = ''
     installShellCompletion --cmd noctalia \
@@ -133,10 +141,9 @@ stdenv.mkDerivation {
       --zsh <($out/bin/noctalia completions zsh)
   '';
 
-  postFixup = ''
-    wrapProgram $out/bin/noctalia \
-      --prefix PATH : ${lib.makeBinPath [ git ]} \
-      --prefix XDG_DATA_DIRS : "${glib.getSchemaDataDirPath gsettings-desktop-schemas}"
+  postPatch = ''
+    substituteInPlace meson.build \
+      --replace-fail "_git_revision_config.set('VCS_TAG', 'unknown')" "_git_revision_config.set('VCS_TAG', '${src.shortRev}')"
   '';
 
   meta = with lib; {
