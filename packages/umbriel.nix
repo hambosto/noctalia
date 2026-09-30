@@ -25,7 +25,7 @@
   wayland-protocols,
   wayland-scanner,
   wlroots_0_20,
-  xwayland-satellite,
+  xwayland,
 }:
 let
   fmtDate =
@@ -87,7 +87,7 @@ stdenv.mkDerivation {
       --replace-fail 'Exec=start-umbriel' "Exec=$out/bin/start-umbriel"
 
     wrapProgram $out/bin/umbriel \
-      --prefix PATH : ${lib.makeBinPath [ xwayland-satellite ]} \
+      --prefix PATH : ${lib.makeBinPath [ xwayland ]} \
   '';
 
   postPatch = ''
