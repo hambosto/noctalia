@@ -22,7 +22,7 @@ let
   generateJson = generateConfig jsonFormat;
 in
 {
-  disabledModules = [ "programs/noctalia.nix" ];
+  disabledModules = [ "programs/noctalia" ];
 
   options.programs.noctalia = {
     enable = lib.mkEnableOption "Whether to enable noctalia, a lightweight Wayland shell and bar.";
