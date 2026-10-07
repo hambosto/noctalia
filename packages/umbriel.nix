@@ -3,6 +3,7 @@
   jemalloc,
   lcms2,
   lib,
+  libdisplay-info,
   libdrm,
   libgbm,
   libGL,
@@ -47,6 +48,7 @@ stdenv.mkDerivation {
     cairo
     jemalloc
     lcms2
+    libdisplay-info
     libdrm
     libgbm
     libGL
