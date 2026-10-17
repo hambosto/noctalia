@@ -43,11 +43,11 @@
     "umbriel": {
       "flake": false,
       "locked": {
-        "lastModified": 1792253606,
-        "narHash": "sha256-n6VK1yfdz1KEZ9qhqGqd1PXItncBAuSZyxv+mVp8Aok=",
+        "lastModified": 1792269789,
+        "narHash": "sha256-RkxJgatLP4DGpIpRAI1RFWsLCfXwhHe7WwQ4GtKDm7c=",
         "owner": "noctalia-dev",
         "repo": "umbriel",
-        "rev": "3170459ad6cbccea1cf57cc24e44a5665833ea6c",
+        "rev": "62799bdaa8f310b458010d28b321cd7784d4e726",
         "type": "github"
       },
       "original": {
