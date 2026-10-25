@@ -7,6 +7,7 @@
   libdrm,
   libgbm,
   libGL,
+  libei,
   libinput,
   libxcb,
   libxcb-wm,
@@ -52,6 +53,7 @@ stdenv.mkDerivation {
     libdrm
     libgbm
     libGL
+    libei
     libinput
     libxcb
     libxcb-wm
