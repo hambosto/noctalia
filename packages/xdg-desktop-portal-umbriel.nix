@@ -1,8 +1,8 @@
 {
   cairo,
-  gcc16Stdenv,
   gtk4,
   lib,
+  libei,
   libdrm,
   libgbm,
   meson,
@@ -48,6 +48,9 @@ stdenv.mkDerivation {
     wayland
     wayland-protocols
   ];
+
+  checkInputs = [ libei ];
+  doCheck = true;
 
   nativeBuildInputs = [
     meson
