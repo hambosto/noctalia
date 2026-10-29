@@ -1,8 +1,8 @@
 {
   cairo,
-  gcc16Stdenv,
   gtk4,
   lib,
+  libei,
   libdrm,
   libgbm,
   meson,
@@ -34,6 +34,8 @@ stdenv.mkDerivation {
   version = "unstable-${fmtDate src.lastModifiedDate}-${src.shortRev}";
 
   inherit src;
+
+  checkInputs = [ libei ];
 
   buildInputs = [
     cairo
