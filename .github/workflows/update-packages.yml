@@ -1,0 +1,56 @@
+name: Update Packages
+on:
+  schedule:
+    - cron: "0 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-flake-inputs:
+    name: Update Packages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Set up Cachix
+        uses: cachix/cachix-action@v17
+        with:
+          name: ${{ secrets.CACHIX_CACHE_NAME }}
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+
+      - name: Update flake.lock
+        id: update
+        uses: DeterminateSystems/update-flake-lock@main
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+      - name: Checkout flake.lock PR branch
+        if: steps.update.outputs.pull-request-number != ''
+        env:
+          GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        run: gh pr checkout ${{ steps.update.outputs.pull-request-number }}
+
+      - name: Push noctalia to Cachix
+        if: steps.update.outputs.pull-request-number != ''
+        run: nix build --no-link --print-out-paths .#noctalia | cachix push ${{ secrets.CACHIX_CACHE_NAME }}
+
+      - name: Push umbriel to Cachix
+        if: steps.update.outputs.pull-request-number != ''
+        run: nix build --no-link --print-out-paths .#umbriel | cachix push ${{ secrets.CACHIX_CACHE_NAME }}
+
+      - name: Push xdg-desktop-portal-umbriel to Cachix
+        if: steps.update.outputs.pull-request-number != ''
+        run: nix build --no-link --print-out-paths .#xdg-desktop-portal-umbriel | cachix push ${{ secrets.CACHIX_CACHE_NAME }}
+
+      - name: Auto-merge flake.lock PR
+        if: steps.update.outputs.pull-request-number != ''
+        env:
+          GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        run: gh pr merge ${{ steps.update.outputs.pull-request-number }} --squash --delete-branch

@@ -1,0 +1,156 @@
+{
+  autoAddDriverRunpath,
+  cairo,
+  curl,
+  fetchFromGitHub,
+  fontconfig,
+  freetype,
+  git,
+  glib,
+  gsettings-desktop-schemas,
+  harfbuzz,
+  installShellFiles,
+  jemalloc,
+  lib,
+  libGL,
+  libglvnd,
+  libical,
+  libjxl,
+  libqalculate,
+  librsvg,
+  libsecret,
+  libsndfile,
+  libsodium,
+  libwebp,
+  libxkbcommon,
+  libxml2,
+  makeWrapper,
+  md4c,
+  meson,
+  ninja,
+  nlohmann_json,
+  pam,
+  pango,
+  pipewire,
+  pkg-config,
+  polkit,
+  sdbus-cpp_2,
+  src,
+  stb,
+  stdenv,
+  systemd,
+  tomlplusplus,
+  wayland,
+  wayland-protocols,
+  wayland-scanner,
+  wireplumber,
+}:
+let
+  fmtDate =
+    raw:
+    let
+      year = builtins.substring 0 4 raw;
+      month = builtins.substring 4 2 raw;
+      day = builtins.substring 6 2 raw;
+    in
+    "${year}-${month}-${day}";
+
+  stb' = stb.overrideAttrs (_: {
+    version = "unstable-2025-10-26";
+    src = fetchFromGitHub {
+      owner = "nothings";
+      repo = "stb";
+      rev = "f1c79c02822848a9bed4315b12c8c8f3761e1296";
+      hash = "sha256-BlyXJtAI7WqXCTT3ylww8zoG0hBxaojJnQDvdQOXJPE=";
+    };
+  });
+in
+stdenv.mkDerivation {
+  pname = "noctalia";
+  version = "unstable-${fmtDate src.lastModifiedDate}-${src.shortRev}";
+
+  inherit src;
+
+  buildInputs = [
+    cairo
+    curl
+    fontconfig
+    freetype
+    glib
+    harfbuzz
+    libGL
+    libglvnd
+    libical
+    libjxl
+    libqalculate
+    librsvg
+    libsecret
+    libsndfile
+    libsodium
+    libwebp
+    libxkbcommon
+    libxml2
+    md4c
+    nlohmann_json
+    pam
+    pango
+    pipewire
+    polkit
+    sdbus-cpp_2
+    stb'
+    systemd
+    tomlplusplus
+    wayland
+    wayland-protocols
+    wireplumber
+  ];
+
+  nativeBuildInputs = [
+    autoAddDriverRunpath
+    installShellFiles
+    jemalloc
+    makeWrapper
+    meson
+    ninja
+    pkg-config
+    wayland-scanner
+  ];
+
+  mesonBuildType = "release";
+
+  mesonFlags = [
+    (lib.mesonOption "cpp_args" "-ffat-lto-objects")
+    (lib.mesonOption "c_args" "-ffat-lto-objects")
+    (lib.mesonBool "b_lto" true)
+    (lib.mesonBool "strip" true)
+    "-Dtests=disabled"
+  ];
+
+  ninjaFlags = [ "-v" ];
+
+  postFixup = ''
+    wrapProgram $out/bin/noctalia \
+      --prefix PATH : ${lib.makeBinPath [ git ]} \
+      --prefix XDG_DATA_DIRS : "${glib.getSchemaDataDirPath gsettings-desktop-schemas}"
+  '';
+
+  postInstall = ''
+    installShellCompletion --cmd noctalia \
+      --bash <($out/bin/noctalia completions bash) \
+      --fish <($out/bin/noctalia completions fish) \
+      --zsh <($out/bin/noctalia completions zsh)
+  '';
+
+  postPatch = ''
+    substituteInPlace meson.build \
+      --replace-fail "_git_revision_config.set('VCS_TAG', 'unknown')" "_git_revision_config.set('VCS_TAG', '${src.shortRev}')"
+  '';
+
+  meta = with lib; {
+    description = "A sleek, customizable desktop shell crafted for Wayland.";
+    homepage = "https://github.com/noctalia-dev/noctalia";
+    license = licenses.mit;
+    mainProgram = "noctalia";
+    platforms = platforms.linux;
+  };
+}

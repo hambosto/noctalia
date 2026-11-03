@@ -1,0 +1,111 @@
+{
+  cairo,
+  jemalloc,
+  lcms2,
+  lib,
+  libdisplay-info,
+  libdrm,
+  libgbm,
+  libGL,
+  libei,
+  libinput,
+  libxcb,
+  libxcb-wm,
+  libxkbcommon,
+  makeBinaryWrapper,
+  meson,
+  ninja,
+  nlohmann_json,
+  pango,
+  pixman,
+  pkg-config,
+  src,
+  stdenv,
+  systemd,
+  tomlplusplus,
+  wayland,
+  wayland-protocols,
+  wayland-scanner,
+  wlroots_0_20,
+  xwayland,
+}:
+let
+  fmtDate =
+    raw:
+    let
+      year = builtins.substring 0 4 raw;
+      month = builtins.substring 4 2 raw;
+      day = builtins.substring 6 2 raw;
+    in
+    "${year}-${month}-${day}";
+in
+stdenv.mkDerivation {
+  pname = "umbriel";
+  version = "unstable-${fmtDate src.lastModifiedDate}-${src.shortRev}";
+
+  inherit src;
+
+  buildInputs = [
+    cairo
+    jemalloc
+    lcms2
+    libdisplay-info
+    libdrm
+    libgbm
+    libGL
+    libei
+    libinput
+    libxcb
+    libxcb-wm
+    libxkbcommon
+    nlohmann_json
+    pango
+    pixman
+    systemd
+    tomlplusplus
+    wayland
+    wayland-protocols
+    wlroots_0_20
+  ];
+
+  nativeBuildInputs = [
+    makeBinaryWrapper
+    meson
+    ninja
+    pkg-config
+    wayland-scanner
+  ];
+
+  mesonBuildType = "release";
+
+  mesonFlags = [
+    (lib.mesonOption "cpp_args" "-ffat-lto-objects")
+    (lib.mesonOption "c_args" "-ffat-lto-objects")
+    (lib.mesonBool "b_lto" true)
+    (lib.mesonBool "strip" true)
+    "-Dtests=disabled"
+  ];
+
+  postInstall = ''
+    substituteInPlace "$out/share/wayland-sessions/umbriel.desktop" \
+      --replace-fail 'Exec=start-umbriel' "Exec=$out/bin/start-umbriel"
+
+    wrapProgram $out/bin/umbriel \
+      --prefix PATH : ${lib.makeBinPath [ xwayland ]} \
+  '';
+
+  postPatch = ''
+    substituteInPlace meson.build \
+      --replace-fail "umbriel_git_revision_config.set('VCS_TAG', 'unknown')" "umbriel_git_revision_config.set('VCS_TAG', '${src.shortRev}')"
+  '';
+
+  passthru.providedSessions = [ "umbriel" ];
+
+  meta = with lib; {
+    description = "A Wayland compositor built on wlroots";
+    homepage = "https://github.com/noctalia-dev/umbriel";
+    license = licenses.mit;
+    mainProgram = "umbriel";
+    platforms = platforms.linux;
+  };
+}
